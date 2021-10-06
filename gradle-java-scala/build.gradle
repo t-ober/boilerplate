@@ -1,0 +1,67 @@
+plugins {
+    id 'groovy' // groovy support
+    id 'java' // java support
+    id 'scala' // scala support
+    id 'com.diffplug.spotless' version '5.14.2'//code format
+    id "com.github.maiflai.scalatest" version "0.31" // run scalatest without specific spec task
+}
+
+ext {
+    javaVersion = JavaVersion.VERSION_1_8
+
+    scalaVersion = '2.13'
+    scalaBinaryVersion = '2.13.6'
+    slf4jVersion = '1.7.32'
+    log4jVersion = '2.14.0'
+
+    projectDescription = 'CHANGE-ME'
+
+    scriptsLocation = 'gradle' + File.separator + 'scripts' + File.separator //location of script plugins
+}
+
+apply from: scriptsLocation + 'spotless.gradle'
+apply from: scriptsLocation + 'checkJavaVersion.gradle'
+
+configurations {
+    scalaCompilerPlugin
+}
+
+repositories {
+    mavenCentral() //searches in bintray's repository 'jCenter', which contains Maven Central
+    maven { url 'https://www.jitpack.io' } // allows github repos as dependencies
+
+    // sonatype snapshot repo
+    maven { url 'http://oss.sonatype.org/content/repositories/snapshots' }
+}
+
+dependencies {
+
+    // logging
+    compile 'com.lmax:disruptor:3.4.4' // async logging
+    compile "org.apache.logging.log4j:log4j-api:${log4jVersion}" // log4j
+    compile "org.apache.logging.log4j:log4j-core:${log4jVersion}" // log4j
+    compile "org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}" // log4j -> slf4j
+
+    compile "com.typesafe.scala-logging:scala-logging_${scalaVersion}:3.9.4" // scala logging
+    compile "org.slf4j:log4j-over-slf4j:${slf4jVersion}" // slf4j -> log4j
+    compile "org.slf4j:slf4j-api:${slf4jVersion}"  // slf4j wrapper
+
+    // CORE Scala //
+    compile "org.scala-lang:scala-library:${scalaBinaryVersion}"
+
+    // TEST Scala //
+    testCompile "org.scalatest:scalatest_${scalaVersion}:3.2.9"
+    testRuntime "org.pegdown:pegdown:1.6.0" // HTML report for scalatest
+
+}
+
+group = 'com.github.t-ober'
+version = '0.1-SNAPSHOT'
+description = projectDescription
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
