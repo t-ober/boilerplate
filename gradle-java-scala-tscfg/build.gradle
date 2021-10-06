@@ -1,0 +1,78 @@
+plugins {
+    id 'groovy' // groovy support
+    id 'java' // java support
+    id 'scala' // scala support
+    id 'com.diffplug.spotless' version '5.14.2'//code format
+    id "com.github.maiflai.scalatest" version "0.31" // run scalatest without specific spec task
+    id "de.undercouch.download" version "4.1.2" // downloads plugin
+}
+
+ext {
+    javaVersion = JavaVersion.VERSION_11
+
+    scalaVersion = '2.13'
+    scalaBinaryVersion = '2.13.6'
+    slf4jVersion = '1.7.32'
+    log4jVersion = '2.14.0'
+    tscfgVersion = '0.9.986'
+
+    projectDescription = 'CHANGE-ME'
+
+    scriptsLocation = 'gradle' + File.separator + 'scripts' + File.separator //location of script plugins
+}
+
+apply from: scriptsLocation + 'spotless.gradle'
+apply from: scriptsLocation + 'checkJavaVersion.gradle'
+apply from: scriptsLocation + 'tscfg.gradle' // config tasks
+
+configurations {
+    scalaCompilerPlugin
+}
+
+repositories {
+    mavenCentral() //searches in bintray's repository 'jCenter', which contains Maven Central
+    maven { url 'https://www.jitpack.io' } // allows github repos as dependencies
+
+    // sonatype snapshot repo
+    maven { url 'http://oss.sonatype.org/content/repositories/snapshots' }
+}
+
+dependencies {
+
+    // logging
+    implementation 'com.lmax:disruptor:3.4.4' // async logging
+    implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}" // log4j
+    implementation "org.apache.logging.log4j:log4j-core:${log4jVersion}" // log4j
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}" // log4j -> slf4j
+
+    implementation "com.typesafe.scala-logging:scala-logging_${scalaVersion}:3.9.4" // scala logging
+    implementation "org.slf4j:log4j-over-slf4j:${slf4jVersion}" // slf4j -> log4j
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"  // slf4j wrapper
+
+    // CORE Scala //
+    implementation "org.scala-lang:scala-library:${scalaBinaryVersion}"
+
+    // TEST Scala //
+    testImplementation "org.scalatest:scalatest_${scalaVersion}:3.2.9"
+    testImplementation "org.pegdown:pegdown:1.6.0" // HTML report for scalatest
+
+    // config //
+    implementation 'com.typesafe:config:+'
+    implementation "com.github.carueda:tscfg_2.13:${tscfgVersion}"
+
+}
+
+wrapper {
+    gradleVersion = '7.1.1'
+}
+
+group = 'edu.ie3'
+version = '0.1-SNAPSHOT'
+description = projectDescription
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
