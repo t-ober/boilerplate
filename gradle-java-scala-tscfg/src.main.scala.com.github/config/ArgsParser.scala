@@ -4,6 +4,7 @@ import com.typesafe.config.{ConfigFactory, Config => TypesafeConfig}
 
 import java.io.File
 import java.nio.file.Paths
+import scopt.{OptionParser => scoptOptionParser}
 
 object ArgsParser {
   // case class for allowed arguments
