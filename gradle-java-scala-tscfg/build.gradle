@@ -60,6 +60,9 @@ dependencies {
     implementation 'com.typesafe:config:+'
     implementation "com.github.carueda:tscfg_2.13:${tscfgVersion}"
 
+    // cmd args parser //
+    implementation "com.github.scopt:scopt_${scalaVersion}:+"
+
 }
 
 wrapper {
