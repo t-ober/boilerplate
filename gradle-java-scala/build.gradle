@@ -51,6 +51,7 @@ dependencies {
 
     // TEST Scala //
     testCompile "org.scalatest:scalatest_${scalaVersion}:3.2.9"
+    testImplementation 'com.vladsch.flexmark:flexmark-all:0.35.10'
     testRuntime "org.pegdown:pegdown:1.6.0" // HTML report for scalatest
 
 }
